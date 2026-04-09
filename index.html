@@ -3,19 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ігровий автомат</title>
+    <title>Адаптивний ігровий автомат</title>
     <style>
+      /* Основні стилі (для великих екранів) */
       body {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100vh;
+        min-height: 100vh;
         background: #1a1a1a;
         color: white;
         font-family: Arial, sans-serif;
         margin: 0;
+        padding: 20px; /* Трохи відступу для малих екранів */
       }
+
       .machine {
         background: #2c3e50;
         padding: 30px;
@@ -23,12 +26,17 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
         text-align: center;
         border: 4px solid #34495e;
+        max-width: 100%; /* Щоб не виходила за межі екрана */
+        box-sizing: border-box;
       }
+
       .slots {
         display: flex;
         gap: 20px;
         margin-bottom: 20px;
+        justify-content: center; /* Центруємо слоти */
       }
+
       .slot {
         width: 90px;
         height: 120px;
@@ -40,7 +48,12 @@
         justify-content: center;
         border-radius: 8px;
         box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4);
+        transition:
+          font-size 0.3s,
+          width 0.3s,
+          height 0.3s; /* Плавна зміна */
       }
+
       button {
         padding: 15px 40px;
         font-size: 1.5rem;
@@ -50,9 +63,15 @@
         color: white;
         border: none;
         border-radius: 8px;
-        transition: background 0.2s;
+        transition:
+          background 0.2s,
+          padding 0.3s,
+          font-size 0.3s;
         text-transform: uppercase;
+        width: 100%; /* Кнопка на всю ширину на мобільних */
+        max-width: 300px; /* Але не ширша за 300px */
       }
+
       button:hover {
         background: #c0392b;
       }
@@ -60,12 +79,39 @@
         background: #7f8c8d;
         cursor: not-allowed;
       }
+
       #result {
         margin-top: 20px;
         font-size: 1.5rem;
         font-weight: bold;
         min-height: 28px;
         text-transform: uppercase;
+      }
+
+      /* Стилі для мобільних пристроїв (ширина екрана до 600px) */
+      @media (max-width: 600px) {
+        .machine {
+          padding: 15px; /* Зменшуємо відступи */
+        }
+
+        .slots {
+          gap: 10px; /* Зменшуємо відстань між слотами */
+        }
+
+        .slot {
+          width: 60px; /* Зменшуємо ширину слота */
+          height: 80px; /* Зменшуємо висоту слота */
+          font-size: 3.5rem; /* Зменшуємо розмір цифр */
+        }
+
+        button {
+          padding: 10px 20px; /* Зменшуємо відступи кнопки */
+          font-size: 1.2rem; /* Зменшуємо шрифт кнопки */
+        }
+
+        #result {
+          font-size: 1.2rem; /* Зменшуємо шрифт результату */
+        }
       }
     </style>
   </head>
@@ -97,11 +143,13 @@
         let finalNumbers = [];
 
         slots.forEach((slot, index) => {
+          // Швидка анімація "крутіння"
           intervals[index] = setInterval(() => {
             slot.textContent = Math.floor(Math.random() * 9) + 1;
           }, 50);
         });
 
+        // Послідовна зупинка кожного слота
         setTimeout(() => stopSlot(0), 1000);
         setTimeout(() => stopSlot(1), 1500);
         setTimeout(() => stopSlot(2), 2000);
@@ -112,6 +160,7 @@
           slots[index].textContent = num;
           finalNumbers[index] = num;
 
+          // Перевірка результату після зупинки останнього слота
           if (index === 2) {
             btn.disabled = false;
             checkWin(finalNumbers);
