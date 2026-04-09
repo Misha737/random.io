@@ -79,7 +79,7 @@
         cursor: not-allowed;
       }
 
-      /* @media (max-width: 600px) {
+      @media (max-width: 600px) {
         .machine {
           padding: 15px;
         }
@@ -95,15 +95,15 @@
           padding: 10px 20px;
           font-size: 1.2rem;
         }
-      } */
+      }
     </style>
   </head>
   <body>
     <div class="machine">
       <div class="slots">
-        <div class="slot" id="slot1">7</div>
-        <div class="slot" id="slot2">7</div>
-        <div class="slot" id="slot3">7</div>
+        <div class="slot" id="slot1">5</div>
+        <div class="slot" id="slot2">9</div>
+        <div class="slot" id="slot3">2</div>
       </div>
       <button id="spinBtn" onclick="spin()">Крутити</button>
     </div>
@@ -120,8 +120,11 @@
         btn.disabled = true;
 
         let intervals = [];
+        // Масив з виграшною комбінацією
+        const targetNumbers = [5, 9, 2];
 
         slots.forEach((slot, index) => {
+          // Анімація крутіння (випадкові цифри)
           intervals[index] = setInterval(() => {
             slot.textContent = Math.floor(Math.random() * 9) + 1;
           }, 50);
@@ -133,7 +136,8 @@
 
         function stopSlot(index) {
           clearInterval(intervals[index]);
-          slots[index].textContent = Math.floor(Math.random() * 9) + 1;
+          // Замість випадкового числа ставимо фіксоване з масиву
+          slots[index].textContent = targetNumbers[index];
 
           if (index === 2) {
             btn.disabled = false;
