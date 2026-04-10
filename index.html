@@ -18,7 +18,26 @@
         padding: 20px;
       }
 
+      #menu {
+        background: #2c3e50;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        text-align: center;
+        border: 4px solid #34495e;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        max-width: 300px;
+      }
+
+      #menu h2 {
+        margin-top: 0;
+      }
+
       .machine {
+        display: none;
         background: #2c3e50;
         padding: 30px;
         border-radius: 15px;
@@ -68,7 +87,6 @@
           font-size 0.3s;
         text-transform: uppercase;
         width: 100%;
-        max-width: 300px;
       }
 
       button:hover {
@@ -77,6 +95,11 @@
       button:disabled {
         background: #7f8c8d;
         cursor: not-allowed;
+      }
+
+      .menu-btn {
+        font-size: 1.2rem;
+        padding: 10px 20px;
       }
 
       @media (max-width: 600px) {
@@ -99,16 +122,40 @@
     </style>
   </head>
   <body>
-    <div class="machine">
+    <div id="menu">
+      <h2>Виберіть автомат</h2>
+      <button class="menu-btn" onclick="selectMachine([5, '?', '?'])">
+        Автомат 1 (5??)
+      </button>
+      <button class="menu-btn" onclick="selectMachine([5, 9, '?'])">
+        Автомат 2 (59?)
+      </button>
+      <button class="menu-btn" onclick="selectMachine([5, 9, 1])">
+        Автомат 3 (591)
+      </button>
+      <button class="menu-btn" onclick="selectMachine([5, 9, 2])">
+        Автомат 4 (592)
+      </button>
+    </div>
+
+    <div class="machine" id="machine">
       <div class="slots">
-        <div class="slot" id="slot1">5</div>
-        <div class="slot" id="slot2">9</div>
-        <div class="slot" id="slot3">2</div>
+        <div class="slot" id="slot1">0</div>
+        <div class="slot" id="slot2">0</div>
+        <div class="slot" id="slot3">0</div>
       </div>
       <button id="spinBtn" onclick="spin()">Крутити</button>
     </div>
 
     <script>
+      let currentTarget = [];
+
+      function selectMachine(target) {
+        currentTarget = target;
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("machine").style.display = "block";
+      }
+
       function spin() {
         const btn = document.getElementById("spinBtn");
         const slots = [
@@ -118,14 +165,12 @@
         ];
 
         btn.disabled = true;
-
         let intervals = [];
-        // Масив з виграшною комбінацією
-        const targetNumbers = [5, 9, 2];
 
         slots.forEach((slot, index) => {
-          // Анімація крутіння (випадкові цифри)
           intervals[index] = setInterval(() => {
+            // Під час анімації крутяться тільки цифри або випадкові символи.
+            // Залишаємо цифри для динаміки.
             slot.textContent = Math.floor(Math.random() * 9) + 1;
           }, 50);
         });
@@ -136,8 +181,9 @@
 
         function stopSlot(index) {
           clearInterval(intervals[index]);
-          // Замість випадкового числа ставимо фіксоване з масиву
-          slots[index].textContent = targetNumbers[index];
+
+          // Пряме присвоєння значення з масиву (включаючи знак '?')
+          slots[index].textContent = currentTarget[index];
 
           if (index === 2) {
             btn.disabled = false;
